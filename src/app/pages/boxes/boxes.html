@@ -1,1 +1,37 @@
-<p>boxes works!</p>
+<section class="page">
+    <div class="page-header">
+        <h1>Cajas</h1>
+        <p>Lista de cajas cargada desde la API.</p>
+    </div>
+
+    <ng-container *ngIf="boxes$ | async as boxes; else loading">
+        <table class="data-table" *ngIf="boxes.length > 0; else empty">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Box Code</th>
+                    <th>Capacity</th>
+                    <th>Status</th>
+                    <th>Active</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let box of boxes">
+                    <td>{{ box.id }}</td>
+                    <td>{{ box.boxCode }}</td>
+                    <td>{{ box.capacity }}</td>
+                    <td>{{ box.status }}</td>
+                    <td>{{ box.isActive }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </ng-container>
+
+    <ng-template #loading>
+        <p>Cargando cajas...</p>
+    </ng-template>
+
+    <ng-template #empty>
+        <p>No se encontraron cajas.</p>
+    </ng-template>
+</section>

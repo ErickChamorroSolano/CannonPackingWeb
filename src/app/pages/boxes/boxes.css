@@ -1,0 +1,27 @@
+.page {
+    padding: 1.75rem;
+}
+
+.page-header {
+    margin-bottom: 1.5rem;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+    padding: 0.95rem 1rem;
+    border: 1px solid #e2e8f0;
+}
+
+.data-table th {
+    background: #f8fafc;
+    text-align: left;
+}
+
+.data-table tbody tr:nth-child(even) {
+    background: #f8fafc;
+}

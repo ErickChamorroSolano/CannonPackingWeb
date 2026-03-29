@@ -1,1 +1,9 @@
+:root {
+    --color-primary: #2563eb;
+    --color-secondary: #16a34a;
+    --color-danger: #dc2626;
+    --color-primary-text: #ffffff;
+    --color-secondary-text: #ffffff;
+}
+
 /* You can add global styles to this file, and also import other style files */

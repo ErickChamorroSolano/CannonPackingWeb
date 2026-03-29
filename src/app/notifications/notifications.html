@@ -1,0 +1,8 @@
+<div class="notification-container" *ngIf="notificationService.notifications().length > 0">
+    <div *ngFor="let note of notificationService.notifications()" class="notification"
+        [class.success]="note.type === 'success'" [class.error]="note.type === 'error'"
+        [class.info]="note.type === 'info'">
+        <span class="message">{{ note.message }}</span>
+        <button type="button" aria-label="Cerrar" (click)="notificationService.dismiss(note.id)">×</button>
+    </div>
+</div>

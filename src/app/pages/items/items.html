@@ -1,0 +1,91 @@
+<section class="page">
+    <div class="page-header">
+        <div>
+            <h1>Items</h1>
+            <p>Lista de items cargada desde la API.</p>
+        </div>
+    </div>
+
+    <div class="table-toolbar">
+        <button type="button" class="primary-button" (click)="openCreateDialog()">+ Agregar item</button>
+    </div>
+
+    <ng-container *ngIf="items$ | async as items; else loading">
+        <table class="data-table" *ngIf="items.length > 0; else empty">
+            <thead>
+                <tr>
+                    <th>Código Item</th>
+                    <th>Código Producto</th>
+                    <th>Estado</th>
+                    <th>Caja</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of items">
+                    <td>{{ item.itemCode }}</td>
+                    <td>{{ item.productCode }}</td>
+                    <td>{{ item.status }}</td>
+                    <td>{{ item.boxCode }}</td>
+                    <td class="delete-cell">
+                        <button type="button" class="icon-button delete-button" aria-label="Eliminar item"
+                            (click)="confirmDelete(item)">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M3 6h18M8 6V4h8v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M10 10v6M14 10v6"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                    stroke-linejoin="round" fill="none" />
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </ng-container>
+
+    <ng-template #loading>
+        <p>Cargando items...</p>
+    </ng-template>
+
+    <ng-template #empty>
+        <p>No se encontraron items.</p>
+    </ng-template>
+
+    <div class="modal-backdrop" *ngIf="showCreateDialog">
+        <section class="modal">
+            <button type="button" class="modal-close-button" aria-label="Cerrar"
+                (click)="closeCreateDialog()">×</button>
+            <h2>Agregar item</h2>
+            <form (submit)="submitCreateForm($event)" novalidate>
+                <div class="form-row">
+                    <label for="itemCode">Item Code</label>
+                    <input id="itemCode" #newItemCodeInput name="itemCode" type="text" maxlength="20"
+                        [(ngModel)]="newItemCode" placeholder="Ej. ITM-0001" />
+                </div>
+                <div class="form-row">
+                    <label for="productCode">Product Code</label>
+                    <input id="productCode" name="productCode" type="text" maxlength="20" [(ngModel)]="newProductCode"
+                        placeholder="Ej. PRD-TWL-001" />
+                </div>
+                <p class="form-error" *ngIf="createFormError">{{ createFormError }}</p>
+                <div class="modal-actions">
+                    <button type="button" class="secondary-button" (click)="closeCreateDialog()">Cerrar</button>
+                    <button type="submit" class="primary-button" [disabled]="isCreating">{{ isCreating ? 'Creando...' :
+                        'Aceptar' }}</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <div class="modal-backdrop" *ngIf="itemToDisable">
+        <section class="modal">
+            <h2>Confirmar eliminación</h2>
+            <p>¿Estás seguro de que deseas eliminar el item <strong>{{ itemToDisable.itemCode }}</strong>?</p>
+            <div class="modal-actions">
+                <button type="button" class="button" (click)="cancelDelete()">Cancelar</button>
+                <button type="button" class="danger-button" (click)="disableItem()" [disabled]="isDeleting">
+                    {{ isDeleting ? 'Eliminando...' : 'Eliminar' }}
+                </button>
+            </div>
+        </section>
+    </div>
+</section>

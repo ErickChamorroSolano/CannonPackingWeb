@@ -1,0 +1,46 @@
+.notification-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    display: grid;
+    gap: 0.75rem;
+    z-index: 1000;
+    max-width: min(360px, calc(100vw - 2rem));
+}
+
+.notification {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.95rem 1rem;
+    border-radius: 0.85rem;
+    color: #ffffff;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+}
+
+.notification.success {
+    background: #16a34a;
+}
+
+.notification.error {
+    background: #dc2626;
+}
+
+.notification.info {
+    background: #2563eb;
+}
+
+.notification .message {
+    flex: 1 1 auto;
+    margin-right: 0.75rem;
+}
+
+.notification button {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
