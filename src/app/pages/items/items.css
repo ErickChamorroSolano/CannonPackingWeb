@@ -107,11 +107,25 @@
 .delete-button {
     padding: 0px;
     border-radius: 0.15rem;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .delete-button:hover {
     background-color: rgba(220, 38, 38, 0.12);
+}
+
+.delete-button:disabled {
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+.delete-button:disabled svg {
+    color: #9ca3af;
+}
+
+.delete-button:disabled:hover {
+    background-color: transparent;
+    box-shadow: none;
 }
 
 .delete-button svg {
