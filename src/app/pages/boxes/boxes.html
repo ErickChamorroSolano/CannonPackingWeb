@@ -4,24 +4,49 @@
         <p>Lista de cajas cargada desde la API.</p>
     </div>
 
+    <div class="table-toolbar">
+        <button type="button" class="primary-button" (click)="openCreateBoxDialog()">+ Agregar caja</button>
+    </div>
+
     <ng-container *ngIf="boxes$ | async as boxes; else loading">
         <table class="data-table" *ngIf="boxes.length > 0; else empty">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Box Code</th>
-                    <th>Capacity</th>
-                    <th>Status</th>
-                    <th>Active</th>
+                    <th>Código</th>
+                    <th>Producto</th>
+                    <th>Capacidad</th>
+                    <th>Cantidad actual</th>
+                    <th>Estado</th>
+                    <th style="width: 10%;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let box of boxes">
-                    <td>{{ box.id }}</td>
                     <td>{{ box.boxCode }}</td>
+                    <td>{{ box.productCode }}</td>
                     <td>{{ box.capacity }}</td>
+                    <td>{{ box.currentCount }}</td>
                     <td>{{ box.status }}</td>
-                    <td>{{ box.isActive }}</td>
+                    <td class="actions-cell">
+                        <button type="button" class="icon-button view-button" title="Ver detalles"
+                            (click)="openBoxDetails(box)" style="width: 50% !important;">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M1 12c2.5-5.5 6.5-8 11-8s8.5 2.5 11 8c-2.5 5.5-6.5 8-11 8s-8.5-2.5-11-8z"
+                                    fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <circle cx="12" cy="12" r="3" fill="#000" />
+                            </svg>
+                        </button>
+                        <button type="button" class="icon-button delete-button" title="Eliminar caja"
+                            (click)="confirmDeleteBox(box)" style="width: 50% !important;">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M3 6h18M8 6V4h8v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M10 10v6M14 10v6"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                    stroke-linejoin="round" fill="none" />
+                            </svg>
+                        </button>
+                    </td>
+
                 </tr>
             </tbody>
         </table>
@@ -34,4 +59,115 @@
     <ng-template #empty>
         <p>No se encontraron cajas.</p>
     </ng-template>
+
+    <div class="modal-backdrop" *ngIf="showCreateBoxDialog">
+        <section class="modal">
+            <button type="button" class="modal-close-button" aria-label="Cerrar"
+                (click)="closeCreateBoxDialog()">×</button>
+            <h2>Agregar caja</h2>
+            <form (submit)="submitCreateBoxForm($event)" novalidate>
+                <div class="form-row">
+                    <label for="boxCode">Código</label>
+                    <input id="boxCode" #newBoxCodeInput name="boxCode" type="text" maxlength="20" autofocus
+                        [(ngModel)]="newBoxCode" placeholder="Ej. BOX-0001" />
+                </div>
+                <div class="form-row">
+                    <label for="productCode">Producto</label>
+                    <input id="productCode" name="productCode" type="text" maxlength="20" [(ngModel)]="newProductCode"
+                        placeholder="Ej. PRD-TWL-001" />
+                </div>
+                <div class="form-row">
+                    <label for="capacity">Capacidad</label>
+                    <input id="capacity" name="capacity" type="text" maxlength="3" inputmode="numeric" pattern="[0-9]*"
+                        [(ngModel)]="newBoxCapacity" placeholder="Ej. 120" />
+                </div>
+                <p class="form-error" *ngIf="createBoxFormError">{{ createBoxFormError }}</p>
+                <div class="modal-actions">
+                    <button type="button" class="secondary-button" (click)="closeCreateBoxDialog()">Cerrar</button>
+                    <button type="submit" class="primary-button" [disabled]="isCreatingBox">{{ isCreatingBox ?
+                        'Creando...' : 'Aceptar' }}</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <div class="modal-backdrop" *ngIf="showBoxDetailsPopup">
+        <section class="modal">
+            <button type="button" class="modal-close-button" aria-label="Cerrar" (click)="closeBoxDetails()">×</button>
+            <h2>Detalles de la caja</h2>
+            <p *ngIf="selectedBoxForDetails">Caja: <strong>{{ selectedBoxForDetails.boxCode }}</strong> - Producto:
+                <strong>{{ selectedBoxForDetails.productCode }}</strong>
+            </p>
+            <form class="add-item-form" *ngIf="selectedBoxForDetails?.status === 'OPEN'" (submit)="addItemToBox($event)"
+                novalidate>
+                <div class="form-row">
+                    <label for="availableItem">Agregar item</label>
+                    <div class="select-row">
+                        <select id="availableItem" name="availableItem" [(ngModel)]="selectedAvailableItem">
+                            <option value="">Seleccione un item</option>
+                            <option *ngFor="let item of availableItems" [value]="item.id">{{ item.itemCode }}</option>
+                        </select>
+                        <button type="submit" class="primary-button"
+                            [disabled]="!selectedAvailableItem || isPackingItem">
+                            {{ isPackingItem ? 'Agregando...' : 'Agregar' }}
+                        </button>
+                    </div>
+                </div>
+                <p class="form-error" *ngIf="packItemError">{{ packItemError }}</p>
+            </form>
+            <ng-container *ngIf="selectedBoxForDetails?.towels as towels; else noItems">
+                <table class="data-table" *ngIf="towels.length > 0; else noItems">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th *ngIf="selectedBoxForDetails?.status === 'OPEN'" style="width: 10%;">SACAR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of towels">
+                            <td>{{ item.itemCode }}</td>
+                            <td *ngIf="selectedBoxForDetails?.status === 'OPEN'">
+                                <button type="button" class="icon-button exit-button" title="Sacar item"
+                                    (click)="unpackItem(item)">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M3 12h13" stroke="currentColor" stroke-width="1.8"
+                                            stroke-linecap="round" />
+                                        <path d="M12 8l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                        <path
+                                            d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Z"
+                                            fill="none" stroke="currentColor" stroke-width="1.8" />
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+            <ng-template #noItems>
+                <p>No hay items asociados a esta caja.</p>
+            </ng-template>
+
+            <div class="modal-divider"></div>
+            <div class="modal-footer">
+                <button type="button" class="secondary-button" (click)="closeBoxDetails()">CANCELAR</button>
+                <button type="button" class="primary-button" (click)="toggleBoxState()">
+                    {{ isSelectedBoxOpen ? 'CERRAR CAJA' : 'ABRIR CAJA' }}
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal-backdrop" *ngIf="showBoxDeleteDialog">
+        <section class="modal">
+            <h2>Confirmar eliminación</h2>
+            <p>¿Estás seguro de que deseas eliminar la caja <strong>{{ boxToDelete?.boxCode }}</strong>?</p>
+            <div class="modal-actions">
+                <button type="button" class="secondary-button" (click)="cancelDeleteBox()">Cancelar</button>
+                <button type="button" class="primary-button" (click)="deleteBox()" [disabled]="isDeletingBox">
+                    {{ isDeletingBox ? 'Eliminando...' : 'Eliminar' }}
+                </button>
+            </div>
+        </section>
+    </div>
 </section>

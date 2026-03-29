@@ -17,8 +17,10 @@ export interface Box {
     boxCode: string;
     productCode: string;
     capacity: number;
+    currentCount: number;
     status: string;
     isActive: boolean;
+    towels?: Item[];
 }
 
 export interface PackingRequest {
@@ -38,6 +40,12 @@ export interface PackingResult {
 export interface NewItem {
     itemCode: string;
     productCode: string;
+}
+
+export interface NewBox {
+    boxCode: string;
+    productCode: string;
+    capacity: number;
 }
 
 export interface ApiResponse {
@@ -63,6 +71,18 @@ export class ApiService {
             .pipe(catchError(() => of([])));
     }
 
+    getItemsByBox(boxId: number): Observable<Item[]> {
+        return this.http
+            .get<Item[]>(`${this.baseUrl}/Towel/by-box/${boxId}`)
+            .pipe(catchError(() => of([])));
+    }
+
+    getItemsByProductCode(productCode: string): Observable<Item[]> {
+        return this.http
+            .get<Item[]>(`${this.baseUrl}/Towel/${productCode.toLowerCase()}/available`)
+            .pipe(catchError(() => of([])));
+    }
+
     createItem(myNewItem: NewItem): Observable<string> {
         return this.http.post<string>(`${this.baseUrl}/Towel`, myNewItem, {
             responseType: 'text' as 'json'
@@ -75,6 +95,12 @@ export class ApiService {
         });
     }
 
+    createBox(newBox: NewBox): Observable<string> {
+        return this.http.post<string>(`${this.baseUrl}/Box`, newBox, {
+            responseType: 'text' as 'json'
+        });
+    }
+
     // BOXES
     getBoxes(): Observable<Box[]> {
         return this.http
@@ -82,7 +108,25 @@ export class ApiService {
             .pipe(catchError(() => of([])));
     }
 
+    disableBox(boxId: number): Observable<string> {
+        return this.http.put<string>(`${this.baseUrl}/Box/${boxId}/disable`, null, {
+            responseType: 'text' as 'json',
+        });
+    }
+
+    unpackItem(payload: { boxId: number; itemId: number }): Observable<string> {
+        return this.http.put<string>(`${this.baseUrl}/Packing/unpack`, payload, {
+            responseType: 'text' as 'json',
+        });
+    }
+
     // PACKING
+    packItem(boxId: number, itemId: number): Observable<string> {
+        return this.http.post<string>(`${this.baseUrl}/Packing/${boxId}/pack`, { itemId }, {
+            responseType: 'text' as 'json',
+        });
+    }
+
     createPacking(payload: PackingRequest): Observable<PackingResult> {
         return this.http.post<PackingResult>(`${this.baseUrl}/Packing`, payload);
     }

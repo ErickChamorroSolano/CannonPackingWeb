@@ -17,6 +17,121 @@
     border: 1px solid #e2e8f0;
 }
 
+.actions-cell {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.icon-button {
+    appearance: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    width: 6rem;
+    height: 2.25rem;
+    border-radius: 0.75rem;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.icon-button:hover {
+    background: rgba(148, 163, 184, 0.12);
+}
+
+.view-button svg,
+.delete-button svg,
+.exit-button svg {
+    width: 3rem;
+    height: 1.4rem;
+    display: block;
+}
+
+.view-button {
+    color: #15803d;
+}
+
+.view-button svg path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+}
+
+.view-button svg circle {
+    fill: #15803d;
+}
+
+.view-button:hover {
+    background: rgba(22, 163, 74, 0.12);
+}
+
+.exit-button {
+    color: #dc2626;
+}
+
+.exit-button:hover {
+    background: rgba(220, 38, 38, 0.12);
+}
+
+.delete-button {
+    color: #dc2626;
+}
+
+.delete-button:hover {
+    background: rgba(220, 38, 38, 0.12);
+}
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    display: grid;
+    place-items: center;
+    padding: 1.5rem;
+    z-index: 10;
+}
+
+.modal {
+    position: relative;
+    width: min(580px, 100%);
+    background: #ffffff;
+    border-radius: 1rem;
+    padding: 1.75rem;
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.18);
+}
+
+.modal-close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.modal-divider {
+    border-top: 1px solid #e2e8f0;
+    margin: 1.5rem 0;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
 .data-table th {
     background: #f8fafc;
     text-align: left;
@@ -24,4 +139,88 @@
 
 .data-table tbody tr:nth-child(even) {
     background: #f8fafc;
+}
+
+.table-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-top: 0;
+    width: 100%;
+}
+
+.form-row label {
+    font-weight: 700;
+}
+
+.form-row input,
+.form-row select {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.75rem;
+    padding: 0.85rem 1rem;
+    font-size: 1rem;
+}
+
+.select-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.select-row select {
+    min-width: 0;
+}
+
+.form-error {
+    margin-top: 1rem;
+    color: #b91c1c;
+    font-size: 0.95rem;
+}
+
+.primary-button,
+.secondary-button {
+    border: none;
+    border-radius: 0.75rem;
+    padding: 0.85rem 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.primary-button {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.secondary-button {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.add-item-form {
+    margin: 0 0 1.25rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.select-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.select-row select {
+    min-width: 0;
+    flex: 1;
+}
+
+.select-row button {
+    white-space: nowrap;
 }
