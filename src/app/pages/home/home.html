@@ -1,11 +1,38 @@
 <section class="hero">
-    <div class="hero-copy">
-        <p class="eyebrow">CannonPacking</p>
-        <h1>Gestión de empaques con Angular 21</h1>
-        <p>Usa la API para ver items, cajas y crear empaques desde la interfaz.</p>
+    <div class="hero-copy" style="width: 100%;">
+        <p class="eyebrow">Bienvenido</p>
+        <h1>Gestión de empaques Cannon</h1>
+        <p>A continuación, puedes gestionar los items y cajas y realizar empaques desde la opción CAJAS.</p>
         <div class="card-grid">
-            <a class="card" routerLink="/items">Items</a>
-            <a class="card" routerLink="/boxes">Cajas</a>
+            <a class="card card-item" routerLink="/items">
+                <span class="card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M4 8h16" />
+                        <path d="M4 12h16" />
+                        <path d="M4 16h16" />
+                        <path d="M7 4h10v4H7V4z" />
+                    </svg>
+                </span>
+                <span class="card-text">
+                    <span class="card-label">Items</span>
+                    <span class="card-description">Gestiona el catálogo de toallas y otros tipos de productos.</span>
+                </span>
+            </a>
+            <a class="card card-box" routerLink="/boxes">
+                <span class="card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M4 8l8-4 8 4v8l-8 4-8-4V8z" />
+                        <path d="M4 8l8 4 8-4" />
+                        <path d="M12 12v8" />
+                    </svg>
+                </span>
+                <span class="card-text">
+                    <span class="card-label">Cajas</span>
+                    <span class="card-description">Administra las cajas para los productos y realizar empaques.</span>
+                </span>
+            </a>
         </div>
     </div>
 </section>
